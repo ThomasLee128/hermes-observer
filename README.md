@@ -301,13 +301,12 @@ Hermes Observer is a lightweight read-only status interpreter for Hermes Agent s
 
 It lets users ask natural questions such as:
 
-- `现在咋样`
-- `你在忙啥啊？`
-- `跑完了吗`
-- `在干嘛`
-- `这啥意思`
-- `怎么没发我`
-- `理论上现在不是应该在做某任务吗`
+- `What are you doing right now?`
+- `Are you busy?`
+- `Did the task finish?`
+- `Why did I get this cron message?`
+- `Why did it not send me the result?`
+- `Should it be running this task now?`
 
 Observer reads configured cron state, queue files, JSON manifests, GPU status, and optional user-message history. It then returns a short business-level explanation instead of raw logs.
 
@@ -350,15 +349,15 @@ Users should not need to memorize a command.
 
 Observer can classify phrases like:
 
-- `你在忙啥啊？`
-- `这个任务跑完了吗？`
-- `这啥意思？`
-- `怎么没发我？`
+- `What are you doing right now?`
+- `Did this task finish?`
+- `What does this mean?`
+- `Why did it not send me the result?`
 
 It also avoids misclassifying action requests. For example:
 
-- `帮我修一下转写任务`
-- `补发今天的内容`
+- `Fix the transcription task`
+- `Resend today's content`
 
 These should remain normal execution requests, not read-only Observer requests.
 
@@ -387,13 +386,13 @@ pip install -e .
 ### 2. Run Observer
 
 ```powershell
-python -m hermes_observer --config observer.config.example.json --message "现在咋样"
+python -m hermes_observer --config observer.config.example.json --message "What are you doing right now?"
 ```
 
 ### 3. Test Wake Classification
 
 ```powershell
-python -m hermes_observer --classify "你在忙啥啊？"
+python -m hermes_observer --classify "What are you doing right now?"
 ```
 
 Example output:
@@ -401,15 +400,15 @@ Example output:
 ```json
 {
   "is_observer": true,
-  "confidence": 0.69,
-  "reason": "在忙啥、忙啥"
+  "confidence": 0.44,
+  "reason": "doing/status"
 }
 ```
 
 Action requests should not trigger Observer:
 
 ```powershell
-python -m hermes_observer --classify "帮我修一下转写任务"
+python -m hermes_observer --classify "Fix the transcription task"
 ```
 
 Example output:
@@ -418,7 +417,7 @@ Example output:
 {
   "is_observer": false,
   "confidence": 0.05,
-  "reason": "包含执行/修改类词"
+  "reason": "contains action/modify words"
 }
 ```
 
@@ -471,23 +470,23 @@ Then edit `observer.config.json` to point at your own Hermes paths, queue files,
 ## Output Example
 
 ```text
-Hermes 当前状态
+Hermes Status
 
-结论：
-- Observer 已完成只读检查；如有业务模块配置，会按模块解释状态。
+Conclusion:
+- Observer completed a read-only check. Configured business modules are summarized below.
 
-资源：
-- GPU 15%，显存 10496/12288MB，当前不算空闲
+Resources:
+- GPU 15%, memory 10496/12288MB, currently not idle
 
-业务进展：
-- Backlog transcription：completed 15，failed 35，pending 3192
-- Daily content queue：队列为空
+Business progress:
+- Backlog transcription: completed 15, failed 35, pending 3192
+- Daily content queue: empty
 
 Cron：
-- 最近没有需要立即处理的 cron 失败
+- No recent cron failures need immediate attention
 
-下一步：
-- 近期计划：文件同步 06:30；知识库导出 07:50
+Next:
+- Upcoming: file sync 06:30; knowledge-base export 07:50
 ```
 
 ## Wake Learning
@@ -505,7 +504,7 @@ Design rules:
 Negative action words include:
 
 ```text
-改、修、删、停、重启、补发、继续、跑一遍、执行、安装、清理、迁移
+fix, modify, delete, stop, restart, resend, continue, run again, execute, install, clean, migrate
 ```
 
 ## Project Structure

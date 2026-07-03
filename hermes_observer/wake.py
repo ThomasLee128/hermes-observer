@@ -3,7 +3,32 @@ from __future__ import annotations
 import re
 
 
-NEGATIVE_WORDS = ["改", "修", "删", "停", "重启", "补发", "继续", "跑一遍", "执行", "安装", "清理", "迁移"]
+NEGATIVE_WORDS = [
+    "改",
+    "修",
+    "删",
+    "停",
+    "重启",
+    "补发",
+    "继续",
+    "跑一遍",
+    "执行",
+    "安装",
+    "清理",
+    "迁移",
+    "fix",
+    "modify",
+    "delete",
+    "stop",
+    "restart",
+    "resend",
+    "continue",
+    "run again",
+    "execute",
+    "install",
+    "clean",
+    "migrate",
+]
 
 STATUS_WORDS = [
     "咋样",
@@ -34,35 +59,51 @@ STATUS_WORDS = [
     "是不是应该",
     "为什么",
     "为啥",
+    "what are you doing",
+    "are you busy",
+    "task finish",
+    "did the task finish",
+    "what does this mean",
+    "why did it not send",
+    "why didn't it send",
+    "should it be running",
+    "status",
+    "progress",
+    "stuck",
 ]
 
-TASK_WORDS = ["Hermes", "hermes", "任务", "cron", "Cron", "队列", "转写", "同步"]
+TASK_WORDS = ["Hermes", "hermes", "任务", "cron", "Cron", "队列", "转写", "同步", "task", "queue", "job"]
 
 
 def classify_observer_intent(text: str) -> dict:
     clean = (text or "").strip()
+    lowered = clean.lower()
     if not clean:
         return {"is_observer": False, "confidence": 0.0, "reason": "空消息"}
-    if any(word in clean for word in NEGATIVE_WORDS):
+    if any(word in lowered for word in NEGATIVE_WORDS) or any(word in clean for word in NEGATIVE_WORDS[:12]):
         return {"is_observer": False, "confidence": 0.05, "reason": "包含执行/修改类词"}
 
     score = 0.0
     hits: list[str] = []
     for word in STATUS_WORDS:
-        if word in clean:
+        if word in clean or word in lowered:
             score += 0.22
             hits.append(word)
     for word in TASK_WORDS:
-        if word in clean:
+        if word in clean or word in lowered:
             score += 0.12
             hits.append(word)
     if re.search(r"(为什么|为啥).*(没|不|没有|失败|空|发)", clean):
         score += 0.25
     if re.search(r"(理论上|这个时候|现在).*(应该|不应该|是不是)", clean):
         score += 0.25
+    if re.search(r"(what|why|should|did).*(doing|busy|status|progress|finish|finished|send|running|mean)", lowered):
+        score += 0.25
     if re.search(r"(帮我)?(看|查|检查).*(任务|状态|进度|Hermes|cron|队列)", clean, re.I):
         score += 0.25
     if clean in {"现在咋样", "跑得咋样", "任务咋样了", "跑完了吗", "在干嘛", "你在忙啥啊", "你在忙啥啊？", "忙啥呢", "忙什么呢", "做到哪了", "这啥意思", "这个正常吗"}:
+        score += 0.25
+    if lowered in {"what are you doing right now?", "what are you doing right now", "are you busy?", "are you busy", "did the task finish?", "did the task finish", "what does this mean?", "what does this mean"}:
         score += 0.25
 
     confidence = min(score, 0.98)
