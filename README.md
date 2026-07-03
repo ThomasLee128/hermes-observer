@@ -2,11 +2,25 @@
 
 ## 项目背景
 
-随着 AI Agent 从聊天窗口进入长期运行的个人工作流，一个新的问题开始出现：用户关心的不只是“它能不能做事”，还会关心“它此刻到底在做什么”。
+作为一名拥有十年投资经验、最近投身 AI 创业的从业者，我一直在尝试把 AI 更深地放进自己的真实工作流里。
 
-当一个本地 AI 助理开始承担定时任务、队列处理、文件同步、资料转写、知识库归档、数据刷新、消息投递等工作时，它就不再只是一个聊天机器人，而更像一个小型个人后台系统。
+从 [llm-api-detector](https://github.com/ThomasLee128/llm-api-detector) 到 [Sprite-Illustra](https://github.com/ThomasLee128/Sprite-Illustra)，我逐渐意识到一个问题：AI 系统真正进入长期使用后，用户关心的不只是“它能不能做事”，而是“它此刻到底在做什么”。
 
-这时，如果用户只能从零散日志、cron 输出和消息提醒里猜测状态，自动化系统很快会重新变成黑箱。
+我们同时运营着 GPU 分时租赁平台和 OpenAI 兼容 API 聚合服务。我一直认为，作为产品使用者去深度使用自己的产品，是发现真实问题、改进产品体验的最好方式。
+
+在我自己的本地 Hermes Agent 使用过程中，随着定时任务、队列处理、文件同步、资料转写、知识库归档、数据刷新、消息投递等任务越来越多，Hermes 已经不再只是一个聊天机器人，而更像一个长期运行的个人后台系统。
+
+这时新的问题出现了：
+
+- 它现在在忙什么？
+- 某个任务跑完了吗？
+- 为什么没有发我结果？
+- 这条 cron 提醒是什么意思？
+- GPU 是不是被占用了？
+- 队列为空是正常，还是任务没跑？
+- 某个失败是否需要我介入？
+
+如果用户只能从零散日志、cron 输出和消息提醒里猜答案，自动化系统会重新变成一个黑箱。
 
 Hermes Observer 就是为了解决这个问题而做的：给 Hermes Agent 增加一个低优先级、只读、不打断主任务的“业务状态观察员”。
 
@@ -264,7 +278,7 @@ docs/RISK_REVIEW.md
 
 ## 开发说明
 
-Hermes Observer 来源于本地 Hermes Agent 长期运行后的真实使用需求。
+本项目采用 vibecoding 模式开发，来源于我本地 Hermes Agent 的真实使用需求。
 
 当 AI 助理从“聊天工具”变成“个人后台系统”后，最需要补上的不一定是更多自动化，而是一个可以随时回答“它在干嘛”的观察层。
 
@@ -287,13 +301,27 @@ MIT License
 
 ## Project Background
 
-As AI agents move from chat windows into long-running personal workflows, a new problem appears: users no longer only ask whether an agent can do something. They also need to know what the agent is doing right now.
+As a professional with ten years of investment experience who has recently ventured into AI entrepreneurship, I have been trying to embed AI more deeply into real daily workflows.
 
-When a local AI assistant starts handling scheduled jobs, queues, file sync, transcription, knowledge-base exports, data refreshes, and message delivery, it becomes a small personal background system.
+From [llm-api-detector](https://github.com/ThomasLee128/llm-api-detector) to [Sprite-Illustra](https://github.com/ThomasLee128/Sprite-Illustra), I gradually realized that once AI systems enter long-term use, users no longer only care whether an agent can do something. They also care what the agent is doing right now.
 
-Without a readable status layer, that system quickly turns into a black box.
+We operate both a GPU time-sharing rental platform and an OpenAI-compatible API aggregation service. I firmly believe that deeply using our own products as real users is one of the best ways to discover product problems and improve the experience.
 
-Hermes Observer adds a low-priority, read-only observer layer for Hermes Agent.
+In my own local Hermes Agent setup, as scheduled jobs, queues, file sync, transcription, knowledge-base exports, data refreshes, and message delivery tasks increased, Hermes became more than a chat assistant. It became a small personal background system.
+
+That created a new set of questions:
+
+- What is it doing right now?
+- Did a task finish?
+- Why did it not send me the result?
+- What does this cron notification mean?
+- Is the GPU occupied?
+- Is an empty queue normal, or did the job fail to run?
+- Does a failure need my attention?
+
+If the user has to infer the answer from scattered logs, cron outputs, and message notifications, the automation system becomes a black box again.
+
+Hermes Observer is built to solve this problem: it adds a low-priority, read-only business-status observer layer to Hermes Agent.
 
 ## Project Overview
 
@@ -400,8 +428,8 @@ Example output:
 ```json
 {
   "is_observer": true,
-  "confidence": 0.44,
-  "reason": "doing/status"
+  "confidence": 0.72,
+  "reason": "what are you doing"
 }
 ```
 
@@ -482,7 +510,7 @@ Business progress:
 - Backlog transcription: completed 15, failed 35, pending 3192
 - Daily content queue: empty
 
-Cron：
+Cron:
 - No recent cron failures need immediate attention
 
 Next:
@@ -547,7 +575,7 @@ docs/RISK_REVIEW.md
 
 ## Development Notes
 
-Hermes Observer comes from a real need that appears after running a local Hermes Agent as a persistent personal background system.
+This project was developed through a vibecoding workflow and comes from a real need that appeared after running a local Hermes Agent as a persistent personal background system.
 
 When an AI assistant becomes more than a chat tool, one of the most important missing layers is not more automation, but a way to ask:
 

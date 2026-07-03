@@ -80,7 +80,9 @@ def classify_observer_intent(text: str) -> dict:
     lowered = clean.lower()
     if not clean:
         return {"is_observer": False, "confidence": 0.0, "reason": "空消息"}
-    if any(word in lowered for word in NEGATIVE_WORDS) or any(word in clean for word in NEGATIVE_WORDS[:12]):
+    if any(word in lowered for word in NEGATIVE_WORDS[12:]):
+        return {"is_observer": False, "confidence": 0.05, "reason": "contains action/modify words"}
+    if any(word in clean for word in NEGATIVE_WORDS[:12]):
         return {"is_observer": False, "confidence": 0.05, "reason": "包含执行/修改类词"}
 
     score = 0.0
