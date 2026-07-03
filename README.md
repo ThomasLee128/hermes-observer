@@ -1,6 +1,6 @@
 # Hermes Observer
 
-如果你已经有自己的 Hermes Agent，可以尝试把这个项目链接直接发给它：`github.com/ThomasLee128/hermes-observer，帮我安装这个`。
+如果你已经有自己的 Hermes Agent，可以尝试把这个项目链接直接发给它：`https://github.com/ThomasLee128/hermes-observer，帮我安装这个`。
 
 ## 项目背景
 
@@ -301,7 +301,7 @@ MIT License
 
 # Hermes Observer
 
-If you already run your own Hermes Agent, try sending this project link directly to it: `github.com/ThomasLee128/hermes-observer, help me install this`.
+If you already run your own Hermes Agent, try sending this project link directly to it: `https://github.com/ThomasLee128/hermes-observer, help me install this`.
 
 ## Project Background
 
