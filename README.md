@@ -1,5 +1,7 @@
 # Hermes Observer
 
+如果你已经有自己的 Hermes Agent，可以尝试把这个项目链接直接发给它：`github.com/ThomasLee128/hermes-observer，帮我安装这个`。
+
 ## 项目背景
 
 作为一名拥有十年投资经验、最近投身 AI 创业的从业者，我一直在尝试把 AI 更深地放进自己的真实工作流里。
@@ -298,6 +300,8 @@ MIT License
 ---
 
 # Hermes Observer
+
+If you already run your own Hermes Agent, try sending this project link directly to it: `github.com/ThomasLee128/hermes-observer, help me install this`.
 
 ## Project Background
 
