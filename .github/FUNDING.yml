@@ -1,0 +1,4 @@
+# Show a Sponsor button for users and companies that benefit from Hermes Observer.
+github: [ThomasLee128]
+custom:
+  - https://github.com/ThomasLee128/hermes-observer/issues/new?template=private-integration.yml

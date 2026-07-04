@@ -6,6 +6,8 @@ Hermes Observer is a read-only status interpreter for long-running local AI agen
 
 - README: ./README.md
 - AI quickstart: ./docs/AI_QUICKSTART.md
+- MCP server guide: ./docs/MCP_SERVER.md
+- Private integrations: ./docs/PRIVATE_INTEGRATIONS.md
 - Agent instructions: ./AGENTS.md
 - Privacy review: ./docs/RISK_REVIEW.md
 - Example config: ./observer.config.example.json
@@ -18,6 +20,7 @@ python -m hermes_observer --config observer.config.example.json --message "What 
 python -m hermes_observer --config observer.config.example.json --json --no-learn
 python -m hermes_observer --classify "What are you doing right now?"
 python -m hermes_observer --classify "Fix the transcription worker"
+python -m hermes_observer.mcp_server --config observer.config.example.json
 ```
 
 ## Boundaries
@@ -27,5 +30,10 @@ Observer is read-only for business workflows. It should not start, stop, restart
 ## Core Code
 
 - ./hermes_observer/cli.py
+- ./hermes_observer/mcp_server.py
 - ./hermes_observer/observer.py
 - ./hermes_observer/wake.py
+
+## Commercial/Support Path
+
+For private Hermes / agent observability integrations, open an issue or contact the maintainer.

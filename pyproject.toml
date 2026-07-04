@@ -14,6 +14,7 @@ Documentation = "https://github.com/ThomasLee128/hermes-observer/blob/main/docs/
 
 [project.scripts]
 hermes-observer = "hermes_observer.cli:main"
+hermes-observer-mcp = "hermes_observer.mcp_server:main"
 
 [tool.ruff]
 line-length = 120

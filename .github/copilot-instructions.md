@@ -18,6 +18,7 @@ python -m hermes_observer --config observer.config.example.json --json --no-lear
 Core files:
 
 - `hermes_observer/cli.py` for CLI behavior
+- `hermes_observer/mcp_server.py` for experimental MCP tool serving
 - `hermes_observer/observer.py` for status readers and report generation
 - `hermes_observer/wake.py` for natural-language intent classification
 - `observer.config.example.json` for safe sample config

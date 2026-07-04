@@ -11,9 +11,12 @@ Observer should summarize configured status sources such as cron jobs, queues, J
 ## Important Files
 
 - `hermes_observer/cli.py`: CLI entry point
+- `hermes_observer/mcp_server.py`: experimental stdio MCP server
 - `hermes_observer/observer.py`: reads configured state sources and builds reports
 - `hermes_observer/wake.py`: classifies natural-language status intent
 - `observer.config.example.json`: safe public example config
+- `docs/MCP_SERVER.md`: MCP client setup and smoke tests
+- `docs/PRIVATE_INTEGRATIONS.md`: private integration and Pro direction
 - `docs/RISK_REVIEW.md`: privacy and release checklist
 - `docs/AI_QUICKSTART.md`: concise user and agent quickstart
 
@@ -36,6 +39,7 @@ Expected behavior:
 - status/progress questions classify as observer intent
 - action/modify requests do not classify as observer intent
 - the example config runs without private local files
+- the MCP server responds to `initialize`, `tools/list`, and `tools/call`
 
 ## Safety Rules
 

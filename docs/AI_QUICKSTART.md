@@ -67,6 +67,22 @@ Do not commit `observer.config.json` if it contains private paths or IDs.
 3. Show the short report.
 4. Do not start, stop, retry, resend, or mutate jobs unless the user separately asks for an action.
 
+## MCP Tool Use
+
+If your AI client supports MCP, use:
+
+```powershell
+python -m hermes_observer.mcp_server --config observer.config.example.json
+```
+
+See `docs/MCP_SERVER.md` for a full stdio client config and manual smoke test.
+
+## Private Integrations
+
+For private Hermes / agent observability integrations, open an issue or contact the maintainer.
+
+中文：如果你需要为自己的 Hermes 或 AI Agent 做私有化状态观测集成，可以提交 issue 或联系维护者。
+
 ## Privacy Checklist
 
 Before publishing a derived project:

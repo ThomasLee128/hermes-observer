@@ -1,0 +1,44 @@
+name: Private integration inquiry
+description: Ask about private Hermes or AI agent observability integration work.
+title: "[Private integration] "
+labels: ["private-integration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For private Hermes / agent observability integrations, share only non-sensitive context here. Do not paste tokens, cookies, private chat IDs, logs, or customer data.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What do you want Hermes Observer to explain or monitor?
+      placeholder: "Example: summarize cron, queue, GPU, and delivery status for a private local agent."
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Describe the agent/runtime at a high level. Keep private paths and secrets out.
+      placeholder: "Local Windows agent, Python workers, JSON queues, Feishu notifications..."
+  - type: dropdown
+    id: support_type
+    attributes:
+      label: Support type
+      options:
+        - Private setup guidance
+        - Custom module adapter
+        - Team dashboard / Pro feature
+        - Security/privacy review
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Privacy, deployment, or read-only boundaries that must be preserved.
+      value: |
+        - Preserve read-only observer behavior.
+        - Do not expose tokens, cookies, chat IDs, private transcript content, or business data.
+        - Prefer config-driven readers over hard-coded private paths.

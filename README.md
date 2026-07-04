@@ -135,20 +135,56 @@ Do not commit your real `observer.config.json` if it contains private paths, cha
 - [AGENTS.md](AGENTS.md): instructions for coding agents working in this repo
 - [.github/copilot-instructions.md](.github/copilot-instructions.md): GitHub Copilot repository instructions
 - [docs/AI_QUICKSTART.md](docs/AI_QUICKSTART.md): short guide for AI assistants and automation users
+- [docs/MCP_SERVER.md](docs/MCP_SERVER.md): experimental MCP server for AI clients
+- [docs/PRIVATE_INTEGRATIONS.md](docs/PRIVATE_INTEGRATIONS.md): private setup, Pro direction, and support inquiries
 - [llms.txt](llms.txt): compact map of the most important docs and commands
 - [docs/RISK_REVIEW.md](docs/RISK_REVIEW.md): privacy and release checklist
+
+## MCP Server
+
+Hermes Observer includes an experimental stdio MCP server so AI clients can call it as a tool:
+
+```powershell
+python -m hermes_observer.mcp_server --config observer.config.example.json
+```
+
+It exposes two tools:
+
+- `hermes_observer_report`
+- `hermes_observer_classify`
+
+See [docs/MCP_SERVER.md](docs/MCP_SERVER.md) for client configuration and a manual smoke test.
+
+## Private Integrations and Pro Direction
+
+For private Hermes / agent observability integrations, open an issue or contact the maintainer.
+
+中文：如果你需要为自己的 Hermes 或 AI Agent 做私有化状态观测集成，可以提交 issue 或联系维护者。
+
+Good paid or sponsored work includes private adapters, dashboard prototypes, team deployment, notification routing, and security/privacy review. See [docs/PRIVATE_INTEGRATIONS.md](docs/PRIVATE_INTEGRATIONS.md).
+
+## Support
+
+If Hermes Observer saves you time or helps your AI agent become easier to operate, use the GitHub Sponsor button or open a private integration inquiry. The open-source CLI stays small and read-only; sponsorship and private work help fund adapters, MCP packaging, dashboard experiments, and documentation.
 
 ## Architecture
 
 ```text
 hermes-observer/
+|-- .github/
+|   |-- FUNDING.yml
+|   |-- copilot-instructions.md
+|   `-- ISSUE_TEMPLATE/
 |-- hermes_observer/
 |   |-- __main__.py
 |   |-- cli.py
+|   |-- mcp_server.py
 |   |-- observer.py
 |   `-- wake.py
 |-- docs/
 |   |-- AI_QUICKSTART.md
+|   |-- MCP_SERVER.md
+|   |-- PRIVATE_INTEGRATIONS.md
 |   `-- RISK_REVIEW.md
 |-- observer.config.example.json
 |-- AGENTS.md
@@ -172,6 +208,7 @@ Smoke checks:
 ```powershell
 python -m hermes_observer --classify "What are you doing right now?"
 python -m hermes_observer --config observer.config.example.json --json --no-learn
+python -m hermes_observer.mcp_server --config observer.config.example.json
 ```
 
 Privacy checks before release:
