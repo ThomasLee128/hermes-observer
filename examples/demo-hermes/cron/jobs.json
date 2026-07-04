@@ -1,0 +1,22 @@
+{
+  "jobs": [
+    {
+      "id": "file-sync",
+      "name": "Example file sync",
+      "enabled": true,
+      "last_status": "ok",
+      "last_error": "",
+      "next_run_at": "2026-07-05T06:30:00+08:00",
+      "script": "sync_files.py"
+    },
+    {
+      "id": "daily-recap",
+      "name": "Example daily recap",
+      "enabled": true,
+      "last_status": "ok",
+      "last_error": "",
+      "next_run_at": "2026-07-05T08:00:00+08:00",
+      "script": "daily_recap.py"
+    }
+  ]
+}

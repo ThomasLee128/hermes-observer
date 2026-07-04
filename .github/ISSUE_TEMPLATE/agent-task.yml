@@ -1,0 +1,32 @@
+name: Agent-friendly task
+description: A small, well-scoped task suitable for an AI coding agent.
+title: "[Agent task] "
+labels: ["agent-friendly"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should change?
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Boundaries the agent should respect, especially privacy/read-only behavior.
+      value: |
+        - Preserve Observer's read-only boundary.
+        - Do not add real tokens, cookies, chat IDs, private paths, or business data.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: Commands or checks that should pass.
+      value: |
+        python -m hermes_observer --classify "What are you doing right now?"
+        python -m hermes_observer --config observer.config.example.json --json --no-learn
+    validations:
+      required: true

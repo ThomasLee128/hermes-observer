@@ -1,16 +1,16 @@
 {
   "env": {
-    "HERMES_HOME": "%USERPROFILE%/.hermes",
-    "WORKSPACE_HOME": "./examples/workspace"
+    "OBSERVER_EXAMPLE_HOME": "./examples/demo-hermes",
+    "OBSERVER_EXAMPLE_WORKSPACE": "./examples/workspace"
   },
-  "state_dir": "${HERMES_HOME}/data/hermes_observer",
+  "state_dir": "${OBSERVER_EXAMPLE_HOME}/state/hermes_observer",
   "gpu": {
-    "enabled": true,
+    "enabled": false,
     "idle_util_pct": 20,
     "idle_memory_mb": 2500
   },
   "cron": {
-    "jobs_path": "${HERMES_HOME}/cron/jobs.json"
+    "jobs_path": "${OBSERVER_EXAMPLE_HOME}/cron/jobs.json"
   },
   "wake_learning": {
     "lookback_minutes": 60,
@@ -20,14 +20,14 @@
   "json_manifests": [
     {
       "label": "Example backlog transcription",
-      "path": "${WORKSPACE_HOME}/example_transcripts/archive_manifest.json",
+      "path": "${OBSERVER_EXAMPLE_WORKSPACE}/example_transcripts/archive_manifest.json",
       "fields": ["completed", "failed", "pending", "updatedAt"]
     }
   ],
   "queues": [
     {
       "label": "Example daily queue",
-      "path": "${HERMES_HOME}/data/example_daily_queue.json"
+      "path": "${OBSERVER_EXAMPLE_HOME}/fixtures/example_daily_queue.json"
     }
   ]
 }

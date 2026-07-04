@@ -42,18 +42,6 @@ def expand_path(value: str, base_env: dict[str, str]) -> Path:
     return Path(os.path.expandvars(expanded)).expanduser()
 
 
-def tail_jsonl(path: Path, limit: int = 20) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    rows = []
-    for line in path.read_text(encoding="utf-8", errors="replace").splitlines()[-limit:]:
-        try:
-            rows.append(json.loads(line))
-        except Exception:
-            continue
-    return rows
-
-
 def run_cmd(cmd: list[str], timeout: int = 10) -> tuple[int, str]:
     try:
         proc = subprocess.run(cmd, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=timeout)
@@ -75,7 +63,7 @@ class Observer:
 
     def gpu_status(self) -> dict[str, Any]:
         if not self.config.get("gpu", {}).get("enabled", True):
-            return {"available": False, "note": "GPU 检查未启用"}
+            return {"available": False, "note": "GPU check disabled"}
         code, out = run_cmd(["nvidia-smi", "--query-gpu=utilization.gpu,memory.used,memory.total", "--format=csv,noheader,nounits"], timeout=8)
         if code != 0 or not out:
             return {"available": False, "error": out}
@@ -83,7 +71,13 @@ class Observer:
             util, used, total = [int(x.strip()) for x in out.splitlines()[0].split(",")[:3]]
             idle_util = int(self.config.get("gpu", {}).get("idle_util_pct", 20))
             idle_mem = int(self.config.get("gpu", {}).get("idle_memory_mb", 2500))
-            return {"available": True, "util": util, "memoryUsedMb": used, "memoryTotalMb": total, "idle": util <= idle_util and used <= idle_mem}
+            return {
+                "available": True,
+                "util": util,
+                "memoryUsedMb": used,
+                "memoryTotalMb": total,
+                "idle": util <= idle_util and used <= idle_mem,
+            }
         except Exception:
             return {"available": False, "error": out}
 
@@ -102,35 +96,35 @@ class Observer:
     def json_manifest_modules(self) -> list[str]:
         lines = []
         for module in self.config.get("json_manifests", []):
-            label = module.get("label", "状态文件")
+            label = module.get("label", "Status file")
             path = expand_path(module["path"], self.env)
             data = read_json(path, {})
             if not data:
-                lines.append(f"- {label}：未找到或不可读")
+                lines.append(f"- {label}: not found or unreadable")
                 continue
             fields = []
             for name in module.get("fields", []):
-                fields.append(f"{name} {data.get(name, '未知')}")
-            lines.append(f"- {label}：" + "，".join(fields))
+                fields.append(f"{name} {data.get(name, 'unknown')}")
+            lines.append(f"- {label}: " + ", ".join(fields))
         return lines
 
     def queue_modules(self) -> list[str]:
         lines = []
         for module in self.config.get("queues", []):
-            label = module.get("label", "队列")
+            label = module.get("label", "Queue")
             path = expand_path(module["path"], self.env)
             data = read_json(path, {"items": []})
             items = data.get("items", []) if isinstance(data, dict) else []
             counts = Counter(str(x.get("status", "unknown")) for x in items)
             if not items:
-                lines.append(f"- {label}：队列为空")
+                lines.append(f"- {label}: empty")
             else:
                 parts = [f"{k} {v}" for k, v in sorted(counts.items())]
-                lines.append(f"- {label}：" + "，".join(parts))
+                lines.append(f"- {label}: " + ", ".join(parts))
         return lines
 
     def learn_wake_phrases(self, trigger_text: str) -> dict[str, Any]:
-        # Portable version learns only from explicitly supplied trigger history file.
+        # Portable version learns only from an explicitly supplied trigger history file.
         history_path = self.config.get("wake_learning", {}).get("history_jsonl")
         if not history_path:
             write_json(self.candidates_path, read_json(self.candidates_path, {"items": []}))
@@ -167,7 +161,15 @@ class Observer:
                     found["evidenceCount"] = int(found.get("evidenceCount", 1)) + 1
                     found["lastSeenAt"] = now_iso()
                 else:
-                    found = {"pattern": pattern, "intent": "hermes_status_check", "confidence": result["confidence"], "evidenceCount": 1, "status": "candidate", "createdAt": now_iso(), "lastSeenAt": now_iso()}
+                    found = {
+                        "pattern": pattern,
+                        "intent": "hermes_status_check",
+                        "confidence": result["confidence"],
+                        "evidenceCount": 1,
+                        "status": "candidate",
+                        "createdAt": now_iso(),
+                        "lastSeenAt": now_iso(),
+                    }
                     items.append(found)
                 learned.append(found)
                 if len(learned) >= 3:
@@ -184,36 +186,36 @@ class Observer:
         queue_lines = self.queue_modules()
         learning = self.learn_wake_phrases(trigger_text) if learn else {"learned": []}
 
-        gpu_line = "未读到 GPU 状态"
+        gpu_line = "GPU status not available"
         if gpu.get("available"):
-            gpu_line = f"GPU {gpu['util']}%，显存 {gpu['memoryUsedMb']}/{gpu['memoryTotalMb']}MB"
-            gpu_line += "，当前空闲" if gpu.get("idle") else "，当前不算空闲"
-        cron_line = "最近没有需要立即处理的 cron 失败"
+            gpu_line = f"GPU {gpu['util']}%, memory {gpu['memoryUsedMb']}/{gpu['memoryTotalMb']} MB"
+            gpu_line += ", currently idle" if gpu.get("idle") else ", currently busy"
+        cron_line = "No recent cron failure needs attention"
         if cron["failed"]:
-            cron_line = "；".join(f"{x['name']}：{x.get('error') or '失败'}" for x in cron["failed"][:3])
-        next_line = "；".join(f"{x['name']} {x['next']}" for x in cron["upcoming"][:3]) or "暂无"
+            cron_line = "; ".join(f"{x['name']}: {x.get('error') or 'failed'}" for x in cron["failed"][:3])
+        next_line = "; ".join(f"{x['name']} {x['next']}" for x in cron["upcoming"][:3]) or "none"
 
         lines = [
-            "Hermes 当前状态",
+            "Hermes Status",
             "",
-            "结论：",
-            "- Observer 已完成只读检查；如有业务模块配置，会按模块解释状态。",
+            "Conclusion:",
+            "- Observer completed a read-only check. Configured business modules are summarized below.",
             "",
-            "资源：",
+            "Resources:",
             f"- {gpu_line}",
             "",
-            "业务进展：",
-            *(manifest_lines or ["- 未配置 JSON manifest 业务模块"]),
-            *(queue_lines or ["- 未配置队列业务模块"]),
+            "Business progress:",
+            *(manifest_lines or ["- No JSON manifest modules configured"]),
+            *(queue_lines or ["- No queue modules configured"]),
             "",
-            "Cron：",
+            "Cron:",
             f"- {cron_line}",
             "",
-            "下一步：",
-            f"- 近期计划：{next_line}",
+            "Next:",
+            f"- Upcoming: {next_line}",
         ]
         if learning.get("learned"):
-            lines.append(f"- Observer 记录了 {len(learning['learned'])} 个唤醒候选。")
+            lines.append(f"- Observer recorded {len(learning['learned'])} wake-phrase candidate(s).")
         report = "\n".join(lines)
         append_jsonl(self.runs_path, {"ts": now_iso(), "trigger": trigger_text, "learned": len(learning.get("learned", []))})
         return report, {"gpu": gpu, "cron": cron, "learning": learning}

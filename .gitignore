@@ -6,3 +6,4 @@ observer.config.json
 data/
 *.log
 examples/fake-hermes/
+examples/demo-hermes/state/

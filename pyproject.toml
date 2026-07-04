@@ -5,6 +5,12 @@ description = "Read-only business status observer for Hermes Agent setups"
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
+keywords = ["ai-agent", "observability", "llmops", "automation", "local-first", "status-monitoring"]
+
+[project.urls]
+Homepage = "https://github.com/ThomasLee128/hermes-observer"
+Repository = "https://github.com/ThomasLee128/hermes-observer"
+Documentation = "https://github.com/ThomasLee128/hermes-observer/blob/main/docs/AI_QUICKSTART.md"
 
 [project.scripts]
 hermes-observer = "hermes_observer.cli:main"

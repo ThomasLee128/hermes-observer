@@ -1,0 +1,31 @@
+# Hermes Observer
+
+Hermes Observer is a read-only status interpreter for long-running local AI agents. It summarizes cron jobs, queues, JSON manifests, GPU status, and optional message history so a user can ask what their agent is doing right now.
+
+## Start Here
+
+- README: ./README.md
+- AI quickstart: ./docs/AI_QUICKSTART.md
+- Agent instructions: ./AGENTS.md
+- Privacy review: ./docs/RISK_REVIEW.md
+- Example config: ./observer.config.example.json
+
+## Key Commands
+
+```powershell
+pip install -e .
+python -m hermes_observer --config observer.config.example.json --message "What are you doing right now?"
+python -m hermes_observer --config observer.config.example.json --json --no-learn
+python -m hermes_observer --classify "What are you doing right now?"
+python -m hermes_observer --classify "Fix the transcription worker"
+```
+
+## Boundaries
+
+Observer is read-only for business workflows. It should not start, stop, restart, download, transcribe, send, retry, or mutate user jobs. It may write only its own observer state files.
+
+## Core Code
+
+- ./hermes_observer/cli.py
+- ./hermes_observer/observer.py
+- ./hermes_observer/wake.py
